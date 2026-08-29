@@ -1,0 +1,10 @@
+version: 2
+
+sources: 
+  - name: bronze
+    schema: bronze
+    tables: 
+      - name: customer
+      - name: ecom_sales
+      - name: product
+      - name: region

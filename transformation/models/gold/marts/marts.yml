@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: mart_sales_daily
+    description: Daily sales, order, customer, revenue, and profitability metrics.
+    columns:
+      - name: order_date
+        data_tests: [not_null, unique]
+      - name: order_count
+        data_tests: [not_null]
+      - name: revenue
+        data_tests: [not_null]
+
+  - name: mart_sales_monthly
+    description: Monthly sales metrics with month-over-month growth.
+    columns:
+      - name: month_start
+        data_tests: [not_null, unique]
+      - name: revenue
+        data_tests: [not_null]
+      - name: profit
+        data_tests: [not_null]
+
+  - name: mart_customer_360
+    description: Lifetime purchasing and profitability metrics for each customer.
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: lifetime_revenue
+        data_tests: [not_null]
+      - name: order_count
+        data_tests: [not_null]
+
+  - name: mart_product_performance
+    description: Lifetime sales and profitability metrics for each product.
+    columns:
+      - name: product_code
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_code
+      - name: revenue
+        data_tests: [not_null]
+      - name: units_sold
+        data_tests: [not_null]
+
+  - name: mart_region_performance
+    description: Lifetime sales and profitability metrics for each geographic region.
+    columns:
+      - name: region_code
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_region')
+                field: region_code
+      - name: revenue
+        data_tests: [not_null]
+      - name: order_count
+        data_tests: [not_null]

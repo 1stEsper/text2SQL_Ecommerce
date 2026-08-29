@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: silver_customer
+    description: Cleaned and deduplicated customer records.
+    columns:
+      - name: customer_id
+        data_tests: [not_null, unique]
+      - name: marital_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Married, Single]
+      - name: gender
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Male, Female]
+      - name: is_home_owner
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [true, false]
+                quote: false
+
+  - name: silver_product
+    description: Cleaned and deduplicated product records.
+    columns:
+      - name: product_code
+        data_tests: [not_null, unique]
+
+  - name: silver_region
+    description: Cleaned and deduplicated geographic records.
+    columns:
+      - name: region_code
+        data_tests: [not_null, unique]
+
+  - name: silver_sales
+    description: Cleaned sales line items at one row per row_id.
+    columns:
+      - name: row_id
+        data_tests: [not_null, unique]
+      - name: order_id
+        data_tests: [not_null]
+      - name: order_date
+        data_tests: [not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('silver_customer')
+                field: customer_id
+      - name: product_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('silver_product')
+                field: product_code
+              config:
+                severity: warn
+      - name: region_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('silver_region')
+                field: region_code
+              config:
+                severity: warn
+      - name: segment
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Consumer, Corporate, Self-Employed]
