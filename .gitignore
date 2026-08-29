@@ -1,9 +1,37 @@
+# Secrets
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# Local databases and data
+*.duckdb
+*.duckdb.*
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+.venv/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# dbt
 target/
 logs/
 dbt_packages/
-*.duckdb.wal
-.venv/
-*.duckdb
+transformation/.user.yml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
