@@ -28,6 +28,10 @@ logs/
 dbt_packages/
 transformation/.user.yml
 
+# Airflow
+airflow.cfg
+standalone_admin_password.txt
+
 # Jupyter
 .ipynb_checkpoints/
 
