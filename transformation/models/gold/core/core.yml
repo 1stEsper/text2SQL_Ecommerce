@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: Customer dimension with one unknown member for unmatched facts.
+    columns:
+      - name: customer_id
+        data_tests: [not_null, unique]
+
+  - name: dim_product
+    description: Product dimension with one unknown member for unmatched facts.
+    columns:
+      - name: product_code
+        data_tests: [not_null, unique]
+
+  - name: dim_region
+    description: Geographic dimension with one unknown member for unmatched facts.
+    columns:
+      - name: region_code
+        data_tests: [not_null, unique]
+
+  - name: dim_date
+    description: Calendar dimension spanning the minimum and maximum sales dates.
+    columns:
+      - name: date_day
+        data_tests: [not_null, unique]
+
+  - name: fct_sales
+    description: Transaction fact table at one row per sales row_id.
+    columns:
+      - name: row_id
+        data_tests: [not_null, unique]
+      - name: order_id
+        data_tests: [not_null]
+      - name: order_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: product_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_code
+      - name: region_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_region')
+                field: region_code

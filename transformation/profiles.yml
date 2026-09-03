@@ -1,0 +1,8 @@
+transformation:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('T2S_DUCKDB_PATH', '../ingestion/medallion.duckdb') }}"
+      schema: main
+      threads: 4

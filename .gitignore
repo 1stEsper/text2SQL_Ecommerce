@@ -28,6 +28,7 @@ logs/
 dbt_packages/
 transformation/.user.yml
 
+
 # Jupyter
 .ipynb_checkpoints/
 
