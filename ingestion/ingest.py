@@ -13,6 +13,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DUCKDB_PATH = PROJECT_ROOT / "ingestion" / "medallion.duckdb"
 
 
+def require_env(name: str) -> str:
+    """Return a required environment variable or fail with a clear message."""
+    value = os.getenv(name)
+    if not value:
+        raise ValueError(f"{name} has not been configured in the .env file!")
+    return value
+
+
 def get_duckdb_path() -> Path:
     """Return one absolute DuckDB path shared by ingestion and dbt."""
     configured_path = os.getenv("T2S_DUCKDB_PATH")
@@ -20,19 +28,13 @@ def get_duckdb_path() -> Path:
 
 
 def create_source():
-    password = os.getenv("SQL_SERVER_PASSWORD")
-    if not password:
-        raise ValueError(
-            "SQL_SERVER_PASSWORD has not been configured in the .env file!"
-        )
-
     connection_url = URL.create(
         "mssql+pyodbc",
-        username=os.getenv("SQL_SERVER_USER", "maiypbn4"),
-        password=password,
-        host=os.getenv("SQL_SERVER_HOST", "45.124.94.158"),
+        username=require_env("SQL_SERVER_USER"),
+        password=require_env("SQL_SERVER_PASSWORD"),
+        host=require_env("SQL_SERVER_HOST"),
         port=int(os.getenv("SQL_SERVER_PORT", "1433")),
-        database=os.getenv("SQL_SERVER_DATABASE", "xomdata_dataset"),
+        database=require_env("SQL_SERVER_DATABASE"),
         query={
             "driver": os.getenv(
                 "SQL_SERVER_ODBC_DRIVER", "ODBC Driver 18 for SQL Server"
